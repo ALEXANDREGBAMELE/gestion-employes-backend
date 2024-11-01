@@ -1,11 +1,24 @@
 # spring.application.name=gestionEmployerBackend
 spring:
+  profiles:
+    active: dev
+
   datasource:
     url: jdbc:postgresql://localhost:5432/gestion_employes
     username: postgres
-    password: root
+    password: admin
   jpa:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: true
+
+app:
+  api:
+    prefix: /api/v1
