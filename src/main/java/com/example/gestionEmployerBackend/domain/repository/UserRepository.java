@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.gestionEmployerBackend.domain.model.CustomUser;
 
 @Repository
-public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
+public interface UserRepository extends JpaRepository<CustomUser, Long> {
 
     // Recherche un utilisateur par son username
     Optional<CustomUser> findByUsername(String username);
