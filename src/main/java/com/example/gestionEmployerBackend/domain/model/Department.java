@@ -1,4 +1,4 @@
 package com.example.gestionEmployerBackend.domain.model;
 
-public class Department {
+public class Department extends BaseEntity {
 }

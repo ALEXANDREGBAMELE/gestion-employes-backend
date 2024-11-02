@@ -1,49 +1,48 @@
 package com.example.gestionEmployerBackend.domain.model;
 
-import java.time.LocalDate;
+import java.util.List;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 
 @Entity
 @Table(name = "contracts")
-public class Contract {
+@Data
+public class Contract extends BaseEntity {
+	// @Id
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
+	// private Long id;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private String reference;
+	private String startDate;
+	private String endDate;
 
-	private String description;
-	private LocalDate startDate;
-	private LocalDate endDate;
-	private Double salary;
+	@ManyToOne
+	@JoinColumn(name = "employee_id", nullable = false)
+	private Employee employee;
 
-	@Column(name = "contract_type")
-	private String contractType;
+	@ManyToOne
+	@JoinColumn(name = "employer_id", nullable = false)
+	private Employer employer;
 
-	private String status;
+	@ManyToOne
+	@JoinColumn(name = "contract_type_id", nullable = false)
+	private ContractType contractType;
 
-	@Column(name = "employee_name")
-	private String employeeName;
+	@OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Clause> clauses;
 
-	@Column(name = "employee_id")
-	private Long employeeId;
+	@OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
+	private List<Benefit> benefits;
 
-	private String details;
-
+	// Un contrat est lié à un seul salaire
+	@OneToOne(mappedBy = "contract", cascade = CascadeType.ALL)
+	private Salary salary;
 }

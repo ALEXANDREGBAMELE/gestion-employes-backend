@@ -6,17 +6,6 @@ import com.example.gestionEmployerBackend.domain.model.Contract;
 
 public interface IContractService {
 
-    // public List<Contract> getContractList(int page, int size, String sortDir,
-    // String sort) {
-    // PageRequest pageReq = PageRequest.of(page, size,
-    // Sort.Direction.fromString(sortDir), sort);
-
-    // Page<Contract> contract = contractRepository
-    // .findByUser(userService.getCurrentUser(), pageReq);
-    // return posts.getContent();
-
-    // }
-
     // Créer un nouveau contrat
     Contract createContract(Contract contract);
 

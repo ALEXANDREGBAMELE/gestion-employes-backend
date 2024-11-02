@@ -1,19 +1,15 @@
 package com.example.gestionEmployerBackend.application.dto;
 
-import java.time.LocalDate;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Setter
-@Getter
+@Data
 public class EmployeeDto {
-
     private Long id;
     private String firstName;
     private String lastName;
+    private String address;
+    private String socialSecurityNumber;
+    private String position;
     private String email;
-    private String department;
-    private LocalDate hireDate;
-
+    private String phoneNumber;
 }
