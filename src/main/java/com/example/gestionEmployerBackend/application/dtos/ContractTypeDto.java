@@ -1,4 +1,4 @@
-package com.example.gestionEmployerBackend.application.dto;
+package com.example.gestionEmployerBackend.application.dtos;
 
 import lombok.Data;
 

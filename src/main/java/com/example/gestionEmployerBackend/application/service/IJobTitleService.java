@@ -1,17 +1,17 @@
 package com.example.gestionEmployerBackend.application.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
-import com.example.gestionEmployerBackend.domain.model.JobTitle;
+import com.example.gestionEmployerBackend.application.dtos.JobTitleDto;
 
 public interface IJobTitleService {
-    List<JobTitle> getJobTitlesList(int page, int size, String sortDir, String sort);
+    Page<JobTitleDto> getAll(int page, int size, String sortDir, String sort);
 
-    JobTitle createJobTitle(JobTitle jobTitle);
+    JobTitleDto create(JobTitleDto jobTitleDto);
 
-    JobTitle getJobTitleById(Long id);
+    JobTitleDto getById(Long id);
 
-    void updateJobTitle(JobTitle jobTitle);
+    JobTitleDto update(JobTitleDto jobTitleDto);
 
-    void deleteJobTitle(Long id);
+    void delete(Long id);
 }

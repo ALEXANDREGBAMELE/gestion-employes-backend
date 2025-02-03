@@ -2,6 +2,8 @@ package com.example.gestionEmployerBackend.domain.model;
 
 import java.time.LocalDate;
 
+import com.example.gestionEmployerBackend.application.utils.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

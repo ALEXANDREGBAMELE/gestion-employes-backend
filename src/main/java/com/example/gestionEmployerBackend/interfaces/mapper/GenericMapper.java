@@ -1,4 +1,4 @@
-package com.example.gestionEmployerBackend.application.utils;
+package com.example.gestionEmployerBackend.interfaces.mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;

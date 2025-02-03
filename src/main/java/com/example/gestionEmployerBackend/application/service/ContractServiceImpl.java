@@ -3,12 +3,15 @@ package com.example.gestionEmployerBackend.application.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.gestionEmployerBackend.application.dtos.ContractDto;
 import com.example.gestionEmployerBackend.domain.model.Contract;
 import com.example.gestionEmployerBackend.domain.repository.ContractRepository;
+import com.example.gestionEmployerBackend.interfaces.mapper.GenericMapper;
 
 @Service
 public class ContractServiceImpl implements IContractService {
@@ -21,10 +24,15 @@ public class ContractServiceImpl implements IContractService {
         return contractRepository.save(contract);
     }
 
+    @Autowired
+    private GenericMapper mapper;
+
     @Override
-    public Contract getContractById(Long id) {
-        return contractRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contract not found with id: " + id));
+    public ContractDto getContractById(Long id) {
+        return mapper.convertToDto(contractRepository.findById(id), ContractDto.class);
+        // contractRepository.findById(id)
+        // .orElseThrow(() -> new RuntimeException("Contract not found with id: " +
+        // id));
     }
 
     @Override
@@ -44,10 +52,19 @@ public class ContractServiceImpl implements IContractService {
     }
 
     @Override
-    public List<Contract> getContractsList(int page, int size, String sortDir, String sort) {
-        Sort.Direction direction = Sort.Direction.fromString(sortDir);
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sort));
-        return contractRepository.findAll(pageRequest).getContent();
+    public List<Contract> getContractsList() {
+        return contractRepository.findAll();
+    }
+
+    @Override
+    public Page<ContractDto> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Contract> contractPage = contractRepository.findAll(pageable);
+
+        Page<ContractDto> contractDtoPage = contractPage
+                .map(contract -> mapper.convertToDto(contract, ContractDto.class));
+
+        return contractDtoPage;
     }
 
 }

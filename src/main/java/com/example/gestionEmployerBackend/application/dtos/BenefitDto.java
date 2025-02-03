@@ -1,9 +1,9 @@
-package com.example.gestionEmployerBackend.application.dto;
+package com.example.gestionEmployerBackend.application.dtos;
 
 import lombok.Data;
 
 @Data
-public class ClauseDto {
+public class BenefitDto {
     private Long id;
     private String type;
     private String description;

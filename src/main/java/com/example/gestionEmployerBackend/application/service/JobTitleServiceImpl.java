@@ -1,14 +1,15 @@
 package com.example.gestionEmployerBackend.application.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.example.gestionEmployerBackend.domain.model.JobTitle;
+import com.example.gestionEmployerBackend.application.dtos.JobTitleDto;
 import com.example.gestionEmployerBackend.domain.repository.JobTitleRepository;
+import com.example.gestionEmployerBackend.interfaces.mapper.GenericMapper;
 
 @Service
 public class JobTitleServiceImpl implements IJobTitleService {
@@ -16,30 +17,40 @@ public class JobTitleServiceImpl implements IJobTitleService {
     @Autowired
     private JobTitleRepository jobTitleRepository;
 
+    @Autowired
+    private GenericMapper mapper;
+
     @Override
-    public List<JobTitle> getJobTitlesList(int page, int size, String sortDir, String sort) {
-        Sort sortDirection = "desc".equalsIgnoreCase(sortDir) ? Sort.by(sort).descending() : Sort.by(sort).ascending();
-        PageRequest pageRequest = PageRequest.of(page, size, sortDirection);
-        return jobTitleRepository.findAll(pageRequest).getContent();
+    public Page<JobTitleDto> getAll(int page, int size, String sortDir, String sort) {
+        Sort.Direction direction = sortDir.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = sort.isEmpty() ? PageRequest.of(page, size) : PageRequest.of(page, size, direction, sort);
+
+        return jobTitleRepository.findAll(pageable)
+                .map(jobTitle -> mapper.convertToDto(jobTitle, JobTitleDto.class));
     }
 
     @Override
-    public JobTitle createJobTitle(JobTitle jobTitle) {
-        return jobTitleRepository.save(jobTitle);
+    public JobTitleDto create(JobTitleDto jobTitleDto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
 
     @Override
-    public JobTitle getJobTitleById(Long id) {
-        return jobTitleRepository.findById(id).orElseThrow(() -> new RuntimeException("Job Title not found"));
+    public JobTitleDto getById(Long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getById'");
     }
 
     @Override
-    public void updateJobTitle(JobTitle jobTitle) {
-        jobTitleRepository.save(jobTitle);
+    public JobTitleDto update(JobTitleDto jobTitleDto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
-    public void deleteJobTitle(Long id) {
-        jobTitleRepository.deleteById(id);
+    public void delete(Long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
+
 }

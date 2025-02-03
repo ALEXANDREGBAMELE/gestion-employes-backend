@@ -7,5 +7,4 @@ import com.example.gestionEmployerBackend.domain.model.JobTitle;
 
 @Repository
 public interface JobTitleRepository extends JpaRepository<JobTitle, Long> {
-    // Additional query methods can be defined here if needed
 }

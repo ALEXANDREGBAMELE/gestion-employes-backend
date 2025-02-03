@@ -1,11 +1,9 @@
 package com.example.gestionEmployerBackend.interfaces.rest;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,14 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.gestionEmployerBackend.application.dto.ContractDto;
+import com.example.gestionEmployerBackend.application.dtos.ContractDto;
 import com.example.gestionEmployerBackend.application.service.IContractService;
-import com.example.gestionEmployerBackend.application.utils.GenericMapper;
 import com.example.gestionEmployerBackend.domain.model.Contract;
+import com.example.gestionEmployerBackend.interfaces.mapper.GenericMapper;
 
 @RestController
 @RequestMapping("/contract")
@@ -33,15 +30,19 @@ class ContractRestController {
     @Autowired
     private GenericMapper mapper;
 
+    // ==================code qui marche bien
+    // @GetMapping("/get")
+    // public List<ContractDto> getContracts() {
+    // List<Contract> contracts = contractService.getContractsList(); // Appel à la
+    // méthode sans pagination
+    // return contracts.stream()
+    // .map(contract -> mapper.convertToDto(contract, ContractDto.class))
+    // .collect(Collectors.toList());
+    // }
+
     @GetMapping("/get")
-    public List<ContractDto> getContracts(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "asc") String sortDir,
-            @RequestParam(defaultValue = "id") String sort) {
-        List<Contract> contracts = contractService.getContractsList(page, size, sortDir, sort);
-        return contracts.stream()
-                .map(contract -> mapper.convertToDto(contract, ContractDto.class))
-                .collect(Collectors.toList());
+    public Page<ContractDto> getContracts() {
+        return contractService.getAll(0, 10); // Page index starts at 0, and size is 10
     }
 
     @PostMapping("/create")

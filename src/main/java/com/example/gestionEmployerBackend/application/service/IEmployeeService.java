@@ -1,17 +1,17 @@
 package com.example.gestionEmployerBackend.application.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
-import com.example.gestionEmployerBackend.domain.model.Employee;
+import com.example.gestionEmployerBackend.application.dtos.EmployeeDto;
 
 public interface IEmployeeService {
-    List<Employee> getEmployeesList(int page, int size, String sortDir, String sort);
+    Page<EmployeeDto> getAll(int page, int size, String sortDir, String sort);
 
-    Employee createEmployee(Employee employee);
+    EmployeeDto create(EmployeeDto employeeDto);
 
-    Employee getEmployeeById(Long id);
+    EmployeeDto getById(Long id);
 
-    void updateEmployee(Employee employee);
+    EmployeeDto update(EmployeeDto employeeDto);
 
     void deleteEmployee(Long id);
 }

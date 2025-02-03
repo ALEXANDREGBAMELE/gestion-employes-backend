@@ -1,5 +1,7 @@
 package com.example.gestionEmployerBackend.domain.model;
 
+import com.example.gestionEmployerBackend.application.utils.BaseEntity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -10,10 +12,6 @@ import lombok.Data;
 @Table(name = "benefits")
 @Data
 public class Benefit extends BaseEntity {
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private Long id;
-
     private String type;
     private String description;
 

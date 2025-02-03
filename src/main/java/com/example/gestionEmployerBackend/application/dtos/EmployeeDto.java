@@ -1,4 +1,6 @@
-package com.example.gestionEmployerBackend.application.dto;
+package com.example.gestionEmployerBackend.application.dtos;
+
+import java.util.List;
 
 import lombok.Data;
 
@@ -12,4 +14,6 @@ public class EmployeeDto {
     private String position;
     private String email;
     private String phoneNumber;
+    private Long jobTitleId;
+    private List<Long> contractIds;
 }

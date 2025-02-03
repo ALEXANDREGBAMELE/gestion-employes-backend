@@ -1,13 +1,12 @@
 package com.example.gestionEmployerBackend.interfaces.rest;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,68 +17,55 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.gestionEmployerBackend.application.dto.JobTitleDto;
+import com.example.gestionEmployerBackend.application.dtos.JobTitleDto;
 import com.example.gestionEmployerBackend.application.service.IJobTitleService;
-import com.example.gestionEmployerBackend.domain.model.JobTitle;
+import com.example.gestionEmployerBackend.interfaces.mapper.GenericMapper;
 
 @RestController
 @RequestMapping("/jobTitle")
+@Validated
 public class JobTitleRestController {
+
+    private static final Logger logger = LoggerFactory.getLogger(JobTitleRestController.class);
 
     @Autowired
     private IJobTitleService jobTitleService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private GenericMapper mapper;
 
     @GetMapping("/get")
-    public List<JobTitleDto> getJobTitles(
+    public Page<JobTitleDto> getJobTitles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "asc") String sortDir,
             @RequestParam(defaultValue = "id") String sort) {
 
-        List<JobTitle> jobTitles = jobTitleService.getJobTitlesList(page, size, sortDir, sort);
-        return jobTitles.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        return jobTitleService.getAll(page, size, sortDir, sort);
     }
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public JobTitleDto createJobTitle(@RequestBody JobTitleDto jobTitleDto) {
-        JobTitle jobTitle = convertToEntity(jobTitleDto);
-        JobTitle createdJobTitle = jobTitleService.createJobTitle(jobTitle);
-        return convertToDto(createdJobTitle);
+    public JobTitleDto createJobTitle(@Validated @RequestBody JobTitleDto jobTitleDto) {
+        return jobTitleService.create(jobTitleDto);
     }
 
     @GetMapping(value = "/getById/{id}")
-    public JobTitleDto getJobTitle(@PathVariable("id") Long id) {
-        JobTitle jobTitle = jobTitleService.getJobTitleById(id);
-        return convertToDto(jobTitle);
+    public JobTitleDto getJobTitleById(@PathVariable("id") Long id) {
+        return jobTitleService.getById(id);
     }
 
     @PutMapping(value = "/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateJobTitle(@PathVariable("id") Long id, @RequestBody JobTitleDto jobTitleDto) {
-        JobTitle jobTitle = convertToEntity(jobTitleDto);
-        jobTitle.setId(id); // Make sure to set the ID for the update
-        jobTitleService.updateJobTitle(jobTitle);
+    public JobTitleDto updateJobTitle(@PathVariable("id") Long id, @RequestBody JobTitleDto jobTitleDto) {
+        jobTitleDto.setId(id);
+        return jobTitleService.update(jobTitleDto);
     }
 
-    // Convert Entity to DTO
-    private JobTitleDto convertToDto(JobTitle jobTitle) {
-        return modelMapper.map(jobTitle, JobTitleDto.class);
-    }
-
-    // Convert DTO to Entity
-    private JobTitle convertToEntity(JobTitleDto jobTitleDto) {
-        return modelMapper.map(jobTitleDto, JobTitle.class);
-    }
-
-    // Exception handler
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    @DeleteMapping(value = "/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteJobTitle(Long id) {
+        jobTitleService.delete(id);
+        return;
     }
 }

@@ -2,6 +2,8 @@ package com.example.gestionEmployerBackend.domain.model;
 
 import java.util.List;
 
+import com.example.gestionEmployerBackend.application.utils.BaseEntity;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

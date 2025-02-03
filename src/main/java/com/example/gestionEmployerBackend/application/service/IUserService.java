@@ -1,23 +1,23 @@
 package com.example.gestionEmployerBackend.application.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
-import com.example.gestionEmployerBackend.domain.model.CustomUser;
+import com.example.gestionEmployerBackend.application.dtos.CustomUserDto;
 
 public interface IUserService {
 
     // Créer un nouvel utilisateur
-    CustomUser createUser(CustomUser user);
+    CustomUserDto create(CustomUserDto customerUserDto);
 
     // Obtenir un utilisateur par ID
-    CustomUser getUserById(Long id);
+    CustomUserDto getById(Long id);
 
     // Mettre à jour un utilisateur
-    CustomUser updateUser(CustomUser user);
+    CustomUserDto update(CustomUserDto customerUserDto);
 
     // Supprimer un utilisateur par ID
-    void deleteUserById(Long id);
+    void delete(Long id);
 
     // Obtenir une liste d'utilisateurs avec pagination et tri
-    List<CustomUser> getUsersList(int page, int size, String sortDir, String sort);
+    Page<CustomUserDto> getAll(int page, int size, String sortDir, String sort);
 }
