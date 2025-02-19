@@ -29,13 +29,36 @@ public abstract class BaseServiceImpl<T, D> {
         this.dtoClass = dtoClass;
     }
 
+    // public D create(D dto) {
+    // if (dto == null) {
+    // throw new BadRequestException("Invalid data provided for creation.");
+    // }
+    // T entity = mapper.convertToEntity(dto, entityClass);
+    // T savedEntity = repository.save(entity);
+    // return mapper.convertToDto(savedEntity, dtoClass);
+    // }
+
     public D create(D dto) {
         if (dto == null) {
             throw new BadRequestException("Invalid data provided for creation.");
         }
+
+        // Vérifier si un enregistrement similaire existe déjà
+        if (existsByUniqueField(dto)) {
+            throw new BadRequestException("Duplicate entry detected. Record already exists.");
+        }
+
         T entity = mapper.convertToEntity(dto, entityClass);
         T savedEntity = repository.save(entity);
         return mapper.convertToDto(savedEntity, dtoClass);
+    }
+
+    /**
+     * Vérifie si une entité existe déjà selon un champ unique.
+     * Cette méthode doit être surchargée dans chaque service spécifique.
+     */
+    public boolean existsByUniqueField(D dto) {
+        return false; // Doit être implémenté dans les sous-classes
     }
 
     public D update(D dto) {

@@ -1,8 +1,5 @@
 package com.example.gestionEmployerBackend.interfaces.rest;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.gestionEmployerBackend.application.dtos.ContractCreateDto;
 import com.example.gestionEmployerBackend.application.dtos.ContractDto;
 import com.example.gestionEmployerBackend.application.service.serviceImpl.ContractServiceImpl;
 
@@ -43,18 +41,10 @@ public class ContractController {
         return ResponseEntity.ok(contracts);
     }
 
-    @GetMapping("/myGet")
-    public ResponseEntity<Map<String, String>> get() {
-        this.logger.info("Start get test");
-        Map<String, String> moi = new HashMap<String, String>();
-        moi.put("Ggams", "cotton");
-        return ResponseEntity.ok(moi);
-    }
-
     // POST to create a new contract
     @PostMapping("/create")
-    public ResponseEntity<ContractDto> createContract(@RequestBody ContractDto contractDto) {
-        ContractDto contractCreated = contractService.create(contractDto);
+    public ResponseEntity<ContractDto> createContract(@RequestBody ContractCreateDto contractCreateDto) {
+        ContractDto contractCreated = contractService.createContract(contractCreateDto);
         return ResponseEntity.status(201).body(contractCreated); // 201 for created resource
     }
 
