@@ -18,9 +18,6 @@ import lombok.Data;
 @Table(name = "contracts")
 @Data
 public class Contract extends BaseEntity {
-	// @Id
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	// private Long id;
 
 	private String reference;
 	private String startDate;

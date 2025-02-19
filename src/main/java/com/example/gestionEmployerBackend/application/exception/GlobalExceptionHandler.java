@@ -1,40 +1,34 @@
 package com.example.gestionEmployerBackend.application.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/**
- * Gestionnaire global des exceptions.
- */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
-    @ExceptionHandler(UserException.class)
-    public ResponseEntity<CustomErrorResponse> handleUserException(UserException ex) {
-        logger.warn("User error: {}", ex.getMessage());
-        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
-
+    // Gestion des exceptions de type ResourceNotFoundException
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<CustomErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        logger.warn("Resource not found: {}", ex.getMessage());
-        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<CustomErrorResponse> handleGlobalException(Exception ex) {
-        logger.error("Unexpected error: {}", ex.getMessage());
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred. Please try again later.");
+    // Gestion des exceptions de type InvalidRequestException
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<String> handleInvalidRequestException(InvalidRequestException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<CustomErrorResponse> buildResponse(HttpStatus status, String message) {
-        CustomErrorResponse errorResponse = new CustomErrorResponse(status.value(), message);
-        return ResponseEntity.status(status).body(errorResponse);
+    // Gestion des exceptions de type ServerErrorException
+    @ExceptionHandler(ServerErrorException.class)
+    public ResponseEntity<String> handleServerErrorException(ServerErrorException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // Gestion des exceptions non traitées
+    //@ExceptionHandler(Exception.class)
+    //public ResponseEntity<String> handleGeneralException(Exception ex) {
+     //   return new ResponseEntity<>("Une erreur inattendue s'est produite", HttpStatus.INTERNAL_SERVER_ERROR);
+    //}
 }

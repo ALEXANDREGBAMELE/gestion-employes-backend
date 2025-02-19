@@ -1,38 +1,42 @@
 package com.example.gestionEmployerBackend.domain.model;
 
 import java.util.List;
+import jakarta.persistence.Column;
 
 import com.example.gestionEmployerBackend.application.utils.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "employee")
+@Table(name = "employees")
 public class Employee extends BaseEntity {
-
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private Long id;
 
     private String firstName;
     private String lastName;
     private String address;
     private String socialSecurityNumber;
+    @Column(unique=true)
     private String email;
     private String phoneNumber;
+    @Column(unique = true)
+    private String matricule;
 
-    @ManyToOne // Une relation ManyToOne avec JobTitle
-    @JoinColumn(name = "job_title_id", nullable = false) // Colonne pour la clé étrangère
-    private JobTitle jobTitle; // Référence à l'intitulé de poste
+    // Un employé peut avoir plusieurs postes de travail (JobTitle)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "employee_job_titles", joinColumns = @JoinColumn(name = "employee_id"), inverseJoinColumns = @JoinColumn(name = "job_title_id"))
+    private List<JobTitle> jobTitles;
 
     // Un employé peut avoir plusieurs contrats
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<Contract> contracts;
+
 }

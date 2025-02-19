@@ -2,6 +2,9 @@ package com.example.gestionEmployerBackend.domain.model;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.example.gestionEmployerBackend.application.utils.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -9,16 +12,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "employee_job_titles")
-public class EmployeeJobTitle extends BaseEntity {
 
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private Long id;
+public class EmployeeJobTitle extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
@@ -26,6 +28,7 @@ public class EmployeeJobTitle extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "job_title_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private JobTitle jobTitle;
 
     @Column(name = "start_date", nullable = false)

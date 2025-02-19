@@ -1,4 +1,4 @@
-package com.example.gestionEmployerBackend.application.service;
+package com.example.gestionEmployerBackend.application.service.iService;
 
 import org.springframework.data.domain.Page;
 
@@ -13,5 +13,5 @@ public interface IEmployeeService {
 
     EmployeeDto update(EmployeeDto employeeDto);
 
-    void deleteEmployee(Long id);
+    void delete(Long id);
 }

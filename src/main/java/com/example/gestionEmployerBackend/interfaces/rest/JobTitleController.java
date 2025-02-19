@@ -2,7 +2,6 @@ package com.example.gestionEmployerBackend.interfaces.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -18,28 +17,30 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gestionEmployerBackend.application.dtos.JobTitleDto;
-import com.example.gestionEmployerBackend.application.service.IJobTitleService;
+import com.example.gestionEmployerBackend.application.service.serviceImpl.JobTitleServiceImpl;
 import com.example.gestionEmployerBackend.interfaces.mapper.GenericMapper;
 
 @RestController
 @RequestMapping("/jobTitle")
 @Validated
-public class JobTitleRestController {
+public class JobTitleController {
 
-    private static final Logger logger = LoggerFactory.getLogger(JobTitleRestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobTitleController.class);
 
-    @Autowired
-    private IJobTitleService jobTitleService;
+    private final JobTitleServiceImpl jobTitleService;
+    private final GenericMapper mapper;
 
-    @Autowired
-    private GenericMapper mapper;
+    public JobTitleController(JobTitleServiceImpl jobTitleService, GenericMapper mapper) {
+        this.jobTitleService = jobTitleService;
+        this.mapper = mapper;
+    }
 
-    @GetMapping("/get")
+    @GetMapping("/getAll")
     public Page<JobTitleDto> getJobTitles(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "asc") String sortDir,
-            @RequestParam(defaultValue = "id") String sort) {
+            @RequestParam(required = false, defaultValue = "0", name = "page") Integer page,
+            @RequestParam(required = false, defaultValue = "5", name = "size") Integer size,
+            @RequestParam(required = false, defaultValue = "ASC", name = "sortDir") String sortDir,
+            @RequestParam(required = false, defaultValue = "id", name = "sort") String sort) {
 
         return jobTitleService.getAll(page, size, sortDir, sort);
     }

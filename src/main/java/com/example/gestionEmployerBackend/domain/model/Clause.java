@@ -12,10 +12,6 @@ import lombok.Data;
 @Data
 @Table(name = "clauses")
 public class Clause extends BaseEntity {
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private Long id;
-
     private String type;
     private String description;
 

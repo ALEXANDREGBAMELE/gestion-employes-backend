@@ -10,10 +10,7 @@ import lombok.Data;
 @Table(name = "contract_types")
 @Data
 public class ContractType extends BaseEntity {
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private Long id;
-
     private String type;
     private String description;
+    private String code;
 }

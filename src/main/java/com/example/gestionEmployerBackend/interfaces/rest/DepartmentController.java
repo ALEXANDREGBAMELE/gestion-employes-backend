@@ -13,26 +13,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gestionEmployerBackend.application.dtos.DepartmentDto;
-import com.example.gestionEmployerBackend.application.service.IDepartmentService;
+import com.example.gestionEmployerBackend.application.service.serviceImpl.DepartmentServiceImpl;
 
 @RestController
 @RequestMapping("/departments")
 public class DepartmentController {
 
-    private final IDepartmentService departmentService;
+    private final DepartmentServiceImpl departmentService;
 
-    // Constructor-based dependency injection
-    public DepartmentController(IDepartmentService departmentService) {
+    public DepartmentController(DepartmentServiceImpl departmentService) {
         this.departmentService = departmentService;
     }
 
     // GET all departments with pagination and sorting
     @GetMapping("/getAll")
     public ResponseEntity<Page<DepartmentDto>> getAllDepartments(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "ASC") String sortDir,
-            @RequestParam(defaultValue = "id") String sort) {
+            @RequestParam(required = false, defaultValue = "0", name = "page") Integer page,
+            @RequestParam(required = false, defaultValue = "5", name = "size") Integer size,
+            @RequestParam(required = false, defaultValue = "ASC", name = "sortDir") String sortDir,
+            @RequestParam(required = false, defaultValue = "id", name = "sort") String sort) {
         // Call service with pagination parameters
         Page<DepartmentDto> departments = departmentService.getAll(page, size, sortDir, sort);
         return ResponseEntity.ok(departments);

@@ -1,4 +1,4 @@
-package com.example.gestionEmployerBackend.application.service;
+package com.example.gestionEmployerBackend.application.service.iService;
 
 import org.springframework.data.domain.Page;
 

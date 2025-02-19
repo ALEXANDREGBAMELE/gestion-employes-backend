@@ -1,20 +1,25 @@
 package com.example.gestionEmployerBackend.domain.model;
 
+import java.util.List;
+
 import com.example.gestionEmployerBackend.application.utils.BaseEntity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
 @Table(name = "job_titles")
+@EqualsAndHashCode(callSuper = false)
 public class JobTitle extends BaseEntity {
 
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private Long id;
+    private String name;
+    private String description;
 
-    private String name; // E.g., "Sales Assistant", "Program Analyst", "Manager"
-    private String description; // E.g., "Responsible for assisting in sales operations", etc.
+    // Relation avec les employés qui occupent ce poste
+    @OneToMany(mappedBy = "jobTitle")
+    private List<EmployeeJobTitle> employees;
 }

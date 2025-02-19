@@ -10,16 +10,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.example.gestionEmployerBackend.application.exception.BadRequestException;
+import com.example.gestionEmployerBackend.application.exception.ResourceNotFoundException;
 import com.example.gestionEmployerBackend.interfaces.mapper.GenericMapper;
 
-public abstract class BaseService<T, D> {
+public abstract class BaseServiceImpl<T, D> {
 
     protected final JpaRepository<T, Long> repository;
     protected final GenericMapper mapper;
     private final Class<D> dtoClass;
     private final Class<T> entityClass;
 
-    protected BaseService(JpaRepository<T, Long> repository, GenericMapper mapper, Class<T> entityClass,
+    protected BaseServiceImpl(JpaRepository<T, Long> repository, GenericMapper mapper, Class<T> entityClass,
             Class<D> dtoClass) {
         this.repository = repository;
         this.mapper = mapper;
@@ -28,18 +30,27 @@ public abstract class BaseService<T, D> {
     }
 
     public D create(D dto) {
+        if (dto == null) {
+            throw new BadRequestException("Invalid data provided for creation.");
+        }
         T entity = mapper.convertToEntity(dto, entityClass);
         T savedEntity = repository.save(entity);
         return mapper.convertToDto(savedEntity, dtoClass);
     }
 
     public D update(D dto) {
+        if (dto == null) {
+            throw new BadRequestException("Invalid data provided for update.");
+        }
         T entity = mapper.convertToEntity(dto, entityClass);
         T savedEntity = repository.save(entity);
         return mapper.convertToDto(savedEntity, dtoClass);
     }
 
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Entity not found with id: " + id);
+        }
         repository.deleteById(id);
     }
 
@@ -57,7 +68,7 @@ public abstract class BaseService<T, D> {
 
     public D getById(Long id) {
         T entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entity not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Entity 444 not found with id: " + id));
         return mapper.convertToDto(entity, dtoClass);
     }
 }
