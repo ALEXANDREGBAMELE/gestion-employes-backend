@@ -1,12 +1,16 @@
-# spring.application.name=gestionEmployerBackend
+# Nom de l'application
 spring:
+  application:
+    name: gestionEmployerBackend
+
   profiles:
     active: dev
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/gestion_employes
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:gestion_employes}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:admin}
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -19,6 +23,20 @@ spring:
     livereload:
       enabled: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 app:
   api:
     prefix: /api/v1
+  secret-key: ${APP_SECRET_KEY}
+  expiration-time: 900000

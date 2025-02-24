@@ -9,10 +9,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @Entity
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "attendance")
 public class Attendance extends BaseEntity {
 

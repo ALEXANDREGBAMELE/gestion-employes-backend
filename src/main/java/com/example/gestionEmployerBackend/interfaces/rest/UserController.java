@@ -65,4 +65,32 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.noContent().build(); // 204 for successful deletion
     }
+
+    // @PostConstruct
+    // public void init() {
+    // System.out.println("Je m'exécute tout seul...");
+    // userService.updatePassword("alex.gbamele", "frais100");
+    // }
+
+    // @PostMapping("/first-login")
+    // public ResponseEntity<String> firstLogin(@RequestBody FirstLoginRequest
+    // request) {
+    // userService.setFirstPassword(request.getEmail(), request.getNewPassword());
+    // return ResponseEntity.ok("Mot de passe créé avec succès !");
+    // }
+
+    // @PostMapping("/forgot-password")
+    // public ResponseEntity<String> forgotPassword(@RequestBody
+    // ForgotPasswordRequest request) {
+    // userService.sendPasswordResetToken(request.getEmail());
+    // return ResponseEntity.ok("Un email avec un lien de réinitialisation a été
+    // envoyé.");
+    // }
+
+    // @PostMapping("/reset-password")
+    // public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest
+    // request) {
+    // userService.resetPassword(request.getToken(), request.getNewPassword());
+    // return ResponseEntity.ok("Mot de passe réinitialisé avec succès !");
+    // }
 }

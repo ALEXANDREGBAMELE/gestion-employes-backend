@@ -1,11 +1,11 @@
 package com.example.gestionEmployerBackend.domain.model;
 
 import java.util.List;
-import jakarta.persistence.Column;
 
 import com.example.gestionEmployerBackend.application.utils.BaseEntity;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -13,9 +13,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "employees")
 public class Employee extends BaseEntity {
@@ -24,7 +26,7 @@ public class Employee extends BaseEntity {
     private String lastName;
     private String address;
     private String socialSecurityNumber;
-    @Column(unique=true)
+    @Column(unique = true)
     private String email;
     private String phoneNumber;
     @Column(unique = true)

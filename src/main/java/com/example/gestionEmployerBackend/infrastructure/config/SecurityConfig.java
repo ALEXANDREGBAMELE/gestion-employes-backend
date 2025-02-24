@@ -1,74 +1,73 @@
 package com.example.gestionEmployerBackend.infrastructure.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-// import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import lombok.extern.slf4j.Slf4j;
+import com.example.gestionEmployerBackend.application.service.CustomUserDetailsService;
+import com.example.gestionEmployerBackend.infrastructure.security.JwtAuthenticationFilter;
+import com.example.gestionEmployerBackend.infrastructure.security.JwtUtils;
 
-@Slf4j
+import lombok.RequiredArgsConstructor;
+
 @Configuration
-// @EnableWebSecurity
+@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
-    /**
-     * 
-     * @Bean
-     *       public JwtRequestFilter jwtRequestFilter() {
-     *       return new JwtRequestFilter();
-     *       }
-     * 
-     *       // Configuration du SecurityFilterChain
-     * @Bean
-     *       public SecurityFilterChain securityFilterChain(HttpSecurity http)
-     *       throws Exception {
-     *       http
-     *       .csrf(AbstractHttpConfigurer::disable)
-     *       .authorizeHttpRequests((requests) -> requests
-     *       .requestMatchers(HttpMethod.POST, "/api/v1/users/register",
-     *       "/api/v1/user/login", "/api/v1/public/**").permitAll() // Permet
-     *       l'accès public
-     *       .anyRequest().authenticated() // Exige une authentification pour les
-     *       autres requêtes
-     *       )
-     *       .addFilterBefore(jwtRequestFilter(),
-     *       UsernamePasswordAuthenticationFilter.class); // Ajoute le filtre JWT
-     *       return http.build();
-     *       }
-     * 
-     *       // Utilisation de AuthenticationConfiguration pour la configuration
-     *       d'AuthenticationManager
-     * @Bean
-     *       public AuthenticationManager
-     *       authenticationManager(AuthenticationConfiguration
-     *       authenticationConfiguration) throws Exception {
-     *       return authenticationConfiguration.getAuthenticationManager();
-     *       }
-     * 
-     *       // Configuration de l'utilisateur en mémoire
-     * @Bean
-     *       public UserDetailsService userDetailsService(PasswordEncoder
-     *       passwordEncoder) {
-     *       UserDetails user = User.withUsername("user")
-     *       .password(passwordEncoder.encode("password"))
-     *       .roles("USER")
-     *       .build();
-     * 
-     *       UserDetails admin = User.withUsername("admin")
-     *       .password(passwordEncoder.encode("adminpassword"))
-     *       .roles("ADMIN")
-     *       .build();
-     * 
-     *       return new InMemoryUserDetailsManager(user, admin); // Crée un
-     *       gestionnaire d'utilisateurs en mémoire
-     *       }
-     * 
-     *       // Bean pour encoder les mots de passe
-     * @Bean
-     *       public PasswordEncoder passwordEncoder() {
-     *       return new BCryptPasswordEncoder(); // Utilise BCrypt pour le hachage
-     *       des mots de passe
-     *       }
-     *
-     * @return
-     */
+    private final CustomUserDetailsService customUserDetailsService;
+    private final JwtUtils jwtUtils;
+
+    // private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    // public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+    // CustomUserDetailsService customUserDetailsService) {
+    // this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    // this.customUserDetailsService = customUserDetailsService;
+    // }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder)
+            throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+                .getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
+        return authenticationManagerBuilder.build();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable()) // Désactiver CSRF pour l'API REST
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Désactiver
+                                                                                                              // les
+                                                                                                              // sessions
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/auth/**", "/swagger-ui/**")
+                        .permitAll() // Permettre l'accès libre aux endpoints d'authentification
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Restreindre aux administrateurs
+                        .anyRequest().authenticated() // Toute autre requête nécessite une authentification
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(
+                        jwtUtils, customUserDetailsService), UsernamePasswordAuthenticationFilter.class); // Ajouter le
+                                                                                                          // filtre JWT
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

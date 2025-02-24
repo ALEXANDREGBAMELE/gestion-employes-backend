@@ -2,17 +2,20 @@ package com.example.gestionEmployerBackend.domain.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.List;
 
 import com.example.gestionEmployerBackend.application.utils.BaseEntity;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "custom_user")
 public class CustomUser extends BaseEntity {
@@ -20,10 +23,11 @@ public class CustomUser extends BaseEntity {
     private String username;
     private String email;
     private String password;
+    private boolean firstLogin;
 
-    // Roles (for example: USER, ADMIN)
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Collection<String> roles;
+    // // Roles (for example: USER, ADMIN)
+    // @ElementCollection(fetch = FetchType.EAGER)
+    // private Collection<String> roles;
 
     // Informations personnelles
     private String firstName;
@@ -52,4 +56,12 @@ public class CustomUser extends BaseEntity {
     private LocalDateTime lastLoginAt;
     private int failedLoginAttempts;
     private LocalDateTime accountLockedUntil;
+
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles; // Liste des rôles attribués à cet utilisateur
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 }

@@ -7,11 +7,13 @@ import com.example.gestionEmployerBackend.application.utils.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Setter
+@Getter
 @Table(name = "job_titles")
 @EqualsAndHashCode(callSuper = false)
 public class JobTitle extends BaseEntity {
